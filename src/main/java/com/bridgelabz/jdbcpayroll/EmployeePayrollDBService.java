@@ -48,6 +48,24 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollList;
 	}
+	
+	public static int writeData(){
+		System.out.println("1");
+		String sql="INSERT INTO employee(name,salary,start) values('Shri Ram',5600,'2020-06-01');";
+		System.out.println("2");
+		try (Connection connection = getConnection();) {
+			System.out.println("3");
+			java.sql.Statement statement = connection.createStatement();
+			System.out.println("4");
+			System.out.println("Value is "+statement.executeUpdate(sql));
+			System.out.println("5");
+			return statement.executeUpdate(sql);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
 	public int updateEmployeeData(String name, double salary) {
 		return this.updateEmployeeDataUsingStatement(name, salary);

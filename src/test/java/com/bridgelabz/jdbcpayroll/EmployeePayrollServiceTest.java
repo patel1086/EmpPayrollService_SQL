@@ -20,7 +20,7 @@ public class EmployeePayrollServiceTest {
 	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
 		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
 		arraylist = (ArrayList<EmployeePayrollData>) EmployeePayrollDBService.readData();
-		Assert.assertEquals(2, arraylist.size());
+		Assert.assertEquals(4, arraylist.size());
 	}
 
 	@Test
@@ -36,10 +36,15 @@ public class EmployeePayrollServiceTest {
 
 	@Test
 	public void givenSalaryForEmplyee_FindAvgSalaryOfEmployee_ShouldMatchWithDB() {
-		ArrayList<EmployeePayrollData> employeePayrollData = employeePayrollService
-				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
 		double result = employeePayrollService.findAvgOfEmployeeSalary();
-		Assert.assertEquals(41339.645, result, 0.0);
+		Assert.assertEquals(23469.8225, result, 0.0);
+	}
+	
+	@Test
+	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
+		int result=employeePayrollService.writeData();
+		System.out.println("Jitendra "+result);
+		Assert.assertEquals(1,result);
 	}
 
 }

@@ -64,4 +64,8 @@ public class EmployeePayrollService {
 		
 	}
 
+	public int writeData() {
+		return new EmployeePayrollDBService().writeData();
+	}
+
 }

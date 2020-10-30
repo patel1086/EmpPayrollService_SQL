@@ -59,4 +59,9 @@ public class EmployeePayrollService {
 				.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
 	}
 
+	public double findAvgOfEmployeeSalary() {
+		return new EmployeePayrollDBService().getAvgOfEmployeeSalary();
+		
+	}
+
 }

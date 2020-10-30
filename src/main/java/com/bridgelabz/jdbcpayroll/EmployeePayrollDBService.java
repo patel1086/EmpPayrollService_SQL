@@ -104,4 +104,18 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 	}
+
+	public double getAvgOfEmployeeSalary() {
+		String sql = "SELECT AVG(salary) FROM employee;";
+		try (Connection connection = this.getConnection();) {
+			java.sql.Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				return resultSet.getDouble("AVG(salary)");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

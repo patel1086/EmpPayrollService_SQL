@@ -1,12 +1,20 @@
 package com.bridgelabz.jdbcpayroll;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.*;
 
 public class EmployeePayrollServiceTest {
+
+	EmployeePayrollService employeePayrollService;
+
+	@Before
+	public void setBefore() {
+		employeePayrollService = new EmployeePayrollService();
+	}
 
 	@Test
 	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
@@ -24,6 +32,14 @@ public class EmployeePayrollServiceTest {
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Jitendra");
 		Assert.assertTrue(result);
 
+	}
+
+	@Test
+	public void givenSalaryForEmplyee_FindAvgSalaryOfEmployee_ShouldMatchWithDB() {
+		ArrayList<EmployeePayrollData> employeePayrollData = employeePayrollService
+				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		double result = employeePayrollService.findAvgOfEmployeeSalary();
+		Assert.assertEquals(41339.645, result, 0.0);
 	}
 
 }

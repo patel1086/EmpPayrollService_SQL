@@ -9,18 +9,11 @@ import java.util.*;
 
 public class EmployeePayrollServiceTest {
 
-	EmployeePayrollService employeePayrollService;
-
-	@Before
-	public void setBefore() {
-		employeePayrollService = new EmployeePayrollService();
-	}
-
 	@Test
 	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
 		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
 		arraylist = (ArrayList<EmployeePayrollData>) EmployeePayrollDBService.readData();
-		Assert.assertEquals(4, arraylist.size());
+		Assert.assertEquals(3, arraylist.size());
 	}
 
 	@Test
@@ -36,15 +29,30 @@ public class EmployeePayrollServiceTest {
 
 	@Test
 	public void givenSalaryForEmplyee_FindAvgSalaryOfEmployee_ShouldMatchWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		double result = employeePayrollService.findAvgOfEmployeeSalary();
-		Assert.assertEquals(23469.8225, result, 0.0);
+		Assert.assertEquals(30893.096666666665, result, 0.0);
 	}
 	
+	
+	
+
+//	@Test
+//	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
+//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+//		employeePayrollService.addEmployeePayroll("Mark",50000.00,LocalDate.now(),"M");
+//		boolean result=employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+//		
+//		Assert.assertEquals(1,result);
+//	}
+	
 	@Test
-	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
-		int result=employeePayrollService.writeData();
-		System.out.println("Jitendra "+result);
-		Assert.assertEquals(1,result);
+	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_SholudReturnProperValue() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Map<String,Double> averageSalaryByGender=employeePayrollService.readAverageSalaryByGender(EmployeePayrollService.IOService.DB_IO);
+		Assert.assertTrue(averageSalaryByGender.get("M").equals( 41339.645) && averageSalaryByGender.get("F").equals(10000.00));
 	}
 
 }

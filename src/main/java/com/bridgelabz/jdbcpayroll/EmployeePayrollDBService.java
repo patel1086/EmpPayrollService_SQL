@@ -1,13 +1,16 @@
 package com.bridgelabz.jdbcpayroll;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mysql.cj.xdevapi.Statement;
 
@@ -48,19 +51,12 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollList;
 	}
-	
-	public static int writeData(){
-		System.out.println("1");
-		String sql="INSERT INTO employee(name,salary,start) values('Shri Ram',5600,'2020-06-01');";
-		System.out.println("2");
+
+	public static int writeData() {
+		String sql = "INSERT INTO employee(name,salary,start) values('Shri Ram',5600,'2020-06-01');";
 		try (Connection connection = getConnection();) {
-			System.out.println("3");
 			java.sql.Statement statement = connection.createStatement();
-			System.out.println("4");
-			System.out.println("Value is "+statement.executeUpdate(sql));
-			System.out.println("5");
 			return statement.executeUpdate(sql);
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -104,7 +100,8 @@ public class EmployeePayrollDBService {
 				String name = resultSet.getString("name");
 				double salary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate));
+				String gender = resultSet.getString("gender");
+				employeePayrollList.add(new EmployeePayrollData(id, name, salary, startDate,gender));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -135,5 +132,41 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	public EmployeePayrollData addEmployeePayroll(String name, double salary, LocalDate start,String gender) {
+		int employeeId=-1;
+		EmployeePayrollData employeePayrollData=null;
+		String sql=String.format("INSERT INTO employee (name,gender,salary,start) values('%s','%s','%s','%s')",name,gender,salary,Date.valueOf(start));
+		try(Connection connection = this.getConnection();){
+			java.sql.Statement statement = connection.createStatement();
+			int rowAffected=statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
+			if(rowAffected==1) {
+				ResultSet resultSet=statement.getGeneratedKeys();
+				if(resultSet.next()) employeeId=resultSet.getInt(1);
+			}
+			employeePayrollData=new EmployeePayrollData(employeeId,name,salary,start,gender);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollData;
+	}
+
+	public Map<String, Double> getAverageSalaryByGender() {
+		String sql="SELECT gender,AVG(salary) as avg_salary from employee group by gender;";
+		Map<String,Double> genderToAvgSalaryMap=new HashMap<>();
+		try (Connection connection = this.getConnection();) {
+			java.sql.Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				String gender=resultSet.getString("gender");
+				double avg_salary=resultSet.getDouble("avg_salary");
+				genderToAvgSalaryMap.put(gender, avg_salary);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return genderToAvgSalaryMap;
+		
 	}
 }

@@ -7,12 +7,14 @@ public class EmployeePayrollData {
 	public String Name;
 	public double salary;
 	public LocalDate start;
+	public String gender;
 
-	public EmployeePayrollData(int ID, String Name, double salary,LocalDate start) {
+	public EmployeePayrollData(int ID, String Name, double salary,LocalDate start,String gender) {
 		this.ID = ID;
 		this.Name = Name;
 		this.salary = salary;
 		this.start=start;
+		this.gender=gender;
 	}
 
 	public EmployeePayrollData() {
@@ -20,6 +22,6 @@ public class EmployeePayrollData {
 	}
 
 	public String toString() {
-		return "EmployeePayrollData [ID=" + ID + ", Name=" + Name + ", salary=" + salary + ", start=" + start + "]";
+		return "EmployeePayrollData [ID=" + ID + ", Name=" + Name + ", salary=" + salary + ", start=" + start + ",gender="+gender+"]";
 	}
 }

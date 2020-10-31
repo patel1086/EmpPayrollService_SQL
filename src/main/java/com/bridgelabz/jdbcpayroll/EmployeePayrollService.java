@@ -68,4 +68,15 @@ public class EmployeePayrollService {
 		return new EmployeePayrollDBService().writeData();
 	}
 
+	public void addEmployeePayroll(String name, double salary, LocalDate start,String gender) {
+		new EmployeePayrollDBService().addEmployeePayroll(name,salary,start,gender);
+		
+	}
+
+	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
+		if(ioService.equals(IOService.DB_IO))
+			return new EmployeePayrollDBService().getAverageSalaryByGender();
+		return null;
+		
+	}
 }

@@ -55,28 +55,33 @@ public class EmployeePayrollService {
 		EmployeePayrollDBService employeePayrollDBService = new EmployeePayrollDBService();
 		ArrayList<EmployeePayrollData> employeePayrollDataList = new ArrayList<EmployeePayrollData>();
 		employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
-		return employeePayrollDataList.get(0).Name
-				.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
+		return employeePayrollDataList.get(0).Name.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
 	}
 
 	public double findAvgOfEmployeeSalary() {
 		return new EmployeePayrollDBService().getAvgOfEmployeeSalary();
-		
+
 	}
 
 	public int writeData() {
 		return new EmployeePayrollDBService().writeData();
 	}
 
-	public void addEmployeePayroll(String name, double salary, LocalDate start,String gender) {
-		new EmployeePayrollDBService().addEmployeePayroll(name,salary,start,gender);
-		
+	public void addEmployeePayroll(String name, double salary, LocalDate start, String gender) {
+		new EmployeePayrollDBService().addEmployeePayroll(name, salary, start, gender);
+
 	}
 
 	public Map<String, Double> readAverageSalaryByGender(IOService ioService) {
-		if(ioService.equals(IOService.DB_IO))
+		if (ioService.equals(IOService.DB_IO))
 			return new EmployeePayrollDBService().getAverageSalaryByGender();
 		return null;
-		
+
+	}
+
+	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate,LocalDate endDate) {
+		if (ioService.equals(IOService.DB_IO))
+			return new EmployeePayrollDBService().getEmployeePayrollForDateRange(startDate, endDate);
+		return null;
 	}
 }

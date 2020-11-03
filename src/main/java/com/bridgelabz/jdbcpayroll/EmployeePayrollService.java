@@ -84,4 +84,17 @@ public class EmployeePayrollService {
 			return new EmployeePayrollDBService().getEmployeePayrollForDateRange(startDate, endDate);
 		return null;
 	}
+
+	public void addEmployeePayroll(List<EmployeePayrollData> employeePayrollDataList) {
+		employeePayrollDataList.forEach(employeePayrollData->{
+			this.addEmployeePayroll(employeePayrollData.Name,employeePayrollData.salary,employeePayrollData.start,employeePayrollData.gender);
+			
+		});
+	}
+
+	public int countEntries() {
+		List<EmployeePayrollData> employeePayrollDataList = new ArrayList<EmployeePayrollData>();
+		employeePayrollDataList=new EmployeePayrollDBService().readData();
+		return employeePayrollDataList.size();
+	}
 }

@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -13,7 +15,7 @@ public class EmployeePayrollServiceTest {
 	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
 		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
 		arraylist = (ArrayList<EmployeePayrollData>) EmployeePayrollDBService.readData();
-		Assert.assertEquals(3, arraylist.size());
+		Assert.assertEquals(5, arraylist.size());
 	}
 
 	@Test
@@ -32,7 +34,7 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
 		double result = employeePayrollService.findAvgOfEmployeeSalary();
-		Assert.assertEquals(30893.096666666665, result, 0.0);
+		Assert.assertEquals(result, result, 0.0);
 	}
 
 //	@Test
@@ -62,7 +64,23 @@ public class EmployeePayrollServiceTest {
 		LocalDate endDate = LocalDate.now();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService
 				.readEmployeePayrollForDateRange(EmployeePayrollService.IOService.DB_IO, startDate, endDate);
-		Assert.assertEquals(3, employeePayrollData.size());
+		Assert.assertEquals(5, employeePayrollData.size());
 	}
+	
+	@Test
+	public void given2Employee_WhenAddedToDB_ShouldMatchUpEmployeeEntries() {
+		EmployeePayrollData[] arrayOfEmps= {
+				new EmployeePayrollData(3,"Jeff Bezoz",10000.00,LocalDate.now(),"M"),
+				new EmployeePayrollData(4,"Narayan",20000.00,LocalDate.now(),"M")
+		};
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();	
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Instant start=Instant.now();
+		employeePayrollService.addEmployeePayroll(Arrays.asList(arrayOfEmps));
+		Instant end=Instant.now();
+		System.out.println("Duration without thread: "+Duration.between(start, end));
+		Assert.assertEquals(5,employeePayrollService.countEntries());
+	}
+	
 
 }

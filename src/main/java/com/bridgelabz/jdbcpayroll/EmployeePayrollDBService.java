@@ -15,7 +15,7 @@ import java.util.Map;
 import com.mysql.cj.xdevapi.Statement;
 
 public class EmployeePayrollDBService {
-
+	private static int connectionCounter=0;
 	private static PreparedStatement employeePayrollDataStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
 
@@ -23,12 +23,15 @@ public class EmployeePayrollDBService {
 	}
 
 	private static Connection getConnection() throws SQLException {
+		connectionCounter++;
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?allowPublicKeyRetrieval=true&useSSL=false";
 		String username = "root";
 		String password = "1234";
 		Connection connection;
+		System.out.println("Processing Thread: "+Thread.currentThread().getName()+" Connection to database with Id:"+connectionCounter);
 		System.out.println("connecting to database: " + jdbcURL);
 		connection = DriverManager.getConnection(jdbcURL, username, password);
+		System.out.println("Processing Thread: "+Thread.currentThread().getName()+" Id:"+connectionCounter);
 		System.out.println("Connection established successfully!!!!" + connection);
 		return connection;
 	}

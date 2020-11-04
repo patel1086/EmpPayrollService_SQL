@@ -15,7 +15,7 @@ import java.util.Map;
 import com.mysql.cj.xdevapi.Statement;
 
 public class EmployeePayrollDBService {
-	private static int connectionCounter=0;
+	private static int connectionCounter = 0;
 	private static PreparedStatement employeePayrollDataStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
 
@@ -28,10 +28,11 @@ public class EmployeePayrollDBService {
 		String username = "root";
 		String password = "1234";
 		Connection connection;
-		System.out.println("Processing Thread: "+Thread.currentThread().getName()+" Connection to database with Id:"+connectionCounter);
+		System.out.println("Processing Thread: " + Thread.currentThread().getName() + " Connection to database with Id:"
+				+ connectionCounter);
 		System.out.println("connecting to database: " + jdbcURL);
 		connection = DriverManager.getConnection(jdbcURL, username, password);
-		System.out.println("Processing Thread: "+Thread.currentThread().getName()+" Id:"+connectionCounter);
+		System.out.println("Processing Thread: " + Thread.currentThread().getName() + " Id:" + connectionCounter);
 		System.out.println("Connection established successfully!!!!" + connection);
 		return connection;
 	}
@@ -139,21 +140,72 @@ public class EmployeePayrollDBService {
 
 	public EmployeePayrollData addEmployeePayroll(String name, double salary, LocalDate start, String gender) {
 		int employeeId = -1;
+		Connection connection = null;
 		EmployeePayrollData employeePayrollData = null;
-		String sql = String.format("INSERT INTO employee (name,gender,salary,start) values('%s','%s','%s','%s')", name,
-				gender, salary, Date.valueOf(start));
-		try (Connection connection = this.getConnection();) {
-			java.sql.Statement statement = connection.createStatement();
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try (java.sql.Statement statement = connection.createStatement();) {
+			String sql = String.format("INSERT INTO employee (name,gender,salary,start) values('%s','%s','%s','%s')",
+					name, gender, salary, Date.valueOf(start));
 			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if (resultSet.next())
 					employeeId = resultSet.getInt(1);
 			}
-			employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start, gender);
+			// employeePayrollData = new EmployeePayrollData(employeeId, name, salary,
+			// start, gender);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+				return employeePayrollData;
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
 		}
+		try (java.sql.Statement statement = connection.createStatement();) {
+			double deduction = salary * 0.2;
+			double taxable_pay = salary - deduction;
+			double tax = taxable_pay * 0.1;
+			double net_pay = salary - tax;
+			String sqlpayroll = String.format(
+					"INSERT INTO payroll (emp_id,basic_pay,deduction,taxable_pay,tax,net_pay) values('%s',%.2f,%.2f,%.2f,%.2f,%.2f)",
+					employeeId, salary, deduction, taxable_pay, tax, net_pay);
+			int rowAffected = statement.executeUpdate(sqlpayroll);
+			if (rowAffected == 1) {
+				// employeePayrollData= new
+				// EmployeePayrollData(employeeId,salary,deduction,taxable_pay, tax,net_pay);
+				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start, gender);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+				return employeePayrollData;
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		return employeePayrollData;
 	}
 
@@ -176,7 +228,8 @@ public class EmployeePayrollDBService {
 	}
 
 	public List<EmployeePayrollData> getEmployeePayrollForDateRange(LocalDate startDate, LocalDate endDate) {
-		String sql = String.format("SELECT * FROM employee where start between '%s' and '%s';", Date.valueOf(startDate),Date.valueOf(endDate));
+		String sql = String.format("SELECT * FROM employee where start between '%s' and '%s';", Date.valueOf(startDate),
+				Date.valueOf(endDate));
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try (Connection connection = this.getConnection();) {
 			java.sql.Statement statement = connection.createStatement();

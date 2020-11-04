@@ -55,7 +55,8 @@ public class EmployeePayrollService {
 		EmployeePayrollDBService employeePayrollDBService = new EmployeePayrollDBService();
 		ArrayList<EmployeePayrollData> employeePayrollDataList = new ArrayList<EmployeePayrollData>();
 		employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
-		return employeePayrollDataList.get(0).Name.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
+		return employeePayrollDataList.get(0).Name
+				.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
 	}
 
 	public double findAvgOfEmployeeSalary() {
@@ -79,46 +80,49 @@ public class EmployeePayrollService {
 
 	}
 
-	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate,LocalDate endDate) {
+	public List<EmployeePayrollData> readEmployeePayrollForDateRange(IOService ioService, LocalDate startDate,
+			LocalDate endDate) {
 		if (ioService.equals(IOService.DB_IO))
 			return new EmployeePayrollDBService().getEmployeePayrollForDateRange(startDate, endDate);
 		return null;
 	}
 
 	public void addEmployeePayroll(List<EmployeePayrollData> employeePayrollDataList) {
-		employeePayrollDataList.forEach(employeePayrollData->{
-			this.addEmployeePayroll(employeePayrollData.Name,employeePayrollData.salary,employeePayrollData.start,employeePayrollData.gender);
-			
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			this.addEmployeePayroll(employeePayrollData.Name, employeePayrollData.salary, employeePayrollData.start,
+					employeePayrollData.gender);
+
 		});
 	}
 
 	public int countEntries() {
 		List<EmployeePayrollData> employeePayrollDataList = new ArrayList<EmployeePayrollData>();
-		employeePayrollDataList=new EmployeePayrollDBService().readData();
+		employeePayrollDataList = new EmployeePayrollDBService().readData();
 		return employeePayrollDataList.size();
 	}
 
 	public void addEmployeePayrollWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
-		Map<Integer,Boolean> employeeAdditionStatus=new HashMap<>();
-		employeePayrollDataList.forEach(employeePayrollData->{
-			Runnable task=()->{
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<>();
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			Runnable task = () -> {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
-				System.out.println("Employee Being Added: "+Thread.currentThread().getName());
-				this.addEmployeePayroll(employeePayrollData.Name,employeePayrollData.salary,employeePayrollData.start,employeePayrollData.gender);
+				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
+				this.addEmployeePayroll(employeePayrollData.Name, employeePayrollData.salary, employeePayrollData.start,
+						employeePayrollData.gender);
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
-				System.out.println("Employee Added: "+Thread.currentThread().getName());
+				System.out.println("Employee Added: " + Thread.currentThread().getName());
 			};
-			Thread thread=new Thread(task,employeePayrollData.Name);
+			Thread thread = new Thread(task, employeePayrollData.Name);
 			thread.start();
 		});
-		while(employeeAdditionStatus.containsValue(false)) {
+		while (employeeAdditionStatus.containsValue(false)) {
 			try {
 				Thread.sleep(10);
-			}catch(InterruptedException e) {
-				
+			} catch (InterruptedException e) {
+
 			}
 		}
 		System.out.println(this.employeePayrollList);
-		
+
 	}
 }

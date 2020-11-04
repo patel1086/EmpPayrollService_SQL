@@ -53,7 +53,8 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
 		Map<String, Double> averageSalaryByGender = employeePayrollService
 				.readAverageSalaryByGender(EmployeePayrollService.IOService.DB_IO);
-		Assert.assertTrue(averageSalaryByGender.get("M").equals(41339.645) && averageSalaryByGender.get("F").equals(10000.00));
+		Assert.assertTrue(
+				averageSalaryByGender.get("M").equals(41339.645) && averageSalaryByGender.get("F").equals(10000.00));
 	}
 
 	@Test
@@ -66,36 +67,35 @@ public class EmployeePayrollServiceTest {
 				.readEmployeePayrollForDateRange(EmployeePayrollService.IOService.DB_IO, startDate, endDate);
 		Assert.assertEquals(5, employeePayrollData.size());
 	}
-	
+
 	@Test
 	public void given2Employee_WhenAddedToDB_ShouldMatchUpEmployeeEntries() {
-		EmployeePayrollData[] arrayOfEmps= {
-				new EmployeePayrollData(3,"Jeff Bezoz",10000.00,LocalDate.now(),"M"),
-				new EmployeePayrollData(4,"Narayan",20000.00,LocalDate.now(),"M")
-		};
-		EmployeePayrollService employeePayrollService = new EmployeePayrollService();	
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(4, "Narayan", 20000.00, LocalDate.now(), "M") };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-		Instant start=Instant.now();
+		Instant start = Instant.now();
 		employeePayrollService.addEmployeePayroll(Arrays.asList(arrayOfEmps));
-		Instant end=Instant.now();
-		System.out.println("Duration without thread: "+Duration.between(start, end));
-		Assert.assertEquals(5,employeePayrollService.countEntries());
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		Assert.assertEquals(5, employeePayrollService.countEntries());
 	}
-	
+
 	@Test
-	public void given2Employee_WhenAddedToDBWithThreads_ShouldMatchUpEmployeeEntries() {
-		EmployeePayrollData[] arrayOfEmps= {
-				new EmployeePayrollData(3,"Jeff Bezoz",10000.00,LocalDate.now(),"M"),
-				new EmployeePayrollData(4,"Narayan",20000.00,LocalDate.now(),"M")
-		};
-		EmployeePayrollService employeePayrollService = new EmployeePayrollService();	
+	public void given6Employee_WhenAddedToDBWithThreads_ShouldMatchUpEmployeeEntries() {
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(4, "Narayan", 20000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(5, "Bhanwar", 90000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(6, "Anushka", 25000.00, LocalDate.now(), "F"),
+				new EmployeePayrollData(7, "Radha", 29000.00, LocalDate.now(), "F"),
+				new EmployeePayrollData(8, "Nancy", 20300.00, LocalDate.now(), "F") };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-		Instant start=Instant.now();
+		Instant start = Instant.now();
 		employeePayrollService.addEmployeePayrollWithThreads(Arrays.asList(arrayOfEmps));
-		Instant end=Instant.now();
-		System.out.println("Duration without thread: "+Duration.between(start, end));
-		Assert.assertEquals(17,employeePayrollService.countEntries());
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		Assert.assertEquals(3, employeePayrollService.countEntries());
 	}
-	
 
 }

@@ -32,6 +32,11 @@ public class EmployeePayrollData {
 		this.salary = salary;
 	}
 
+	public EmployeePayrollData(String name, double salary) {
+		this.Name=name;
+		this.salary=salary;
+	}
+
 	public String toString() {
 		return "EmployeePayrollData [ID=" + ID + ", Name=" + Name + ", salary=" + salary + ", start=" + start
 				+ ",gender=" + gender + "]";

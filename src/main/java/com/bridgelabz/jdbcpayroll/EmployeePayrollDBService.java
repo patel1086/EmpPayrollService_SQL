@@ -22,7 +22,7 @@ public class EmployeePayrollDBService {
 	EmployeePayrollDBService() {
 	}
 
-	private synchronized static Connection getConnection() throws SQLException {
+	private static Connection getConnection() throws SQLException {
 		connectionCounter++;
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?allowPublicKeyRetrieval=true&useSSL=false";
 		String username = "root";
@@ -69,17 +69,6 @@ public class EmployeePayrollDBService {
 
 	public int updateEmployeeData(String name, double salary) {
 		return this.updateEmployeeDataUsingStatement(name, salary);
-	}
-
-	private int updateEmployeeDataUsingStatement(String name, double salary) {
-		String sql = String.format("update employee set salary=%.2f where name='%s'", salary, name);
-		try (Connection connection = this.getConnection()) {
-			java.sql.Statement statement = connection.createStatement();
-			return statement.executeUpdate(sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
 	}
 
 	public static ArrayList<EmployeePayrollData> getEmployeePayrollData(String name) {
@@ -179,8 +168,6 @@ public class EmployeePayrollDBService {
 					employeeId, salary, deduction, taxable_pay, tax, net_pay);
 			int rowAffected = statement.executeUpdate(sqlpayroll);
 			if (rowAffected == 1) {
-				// employeePayrollData= new
-				// EmployeePayrollData(employeeId,salary,deduction,taxable_pay, tax,net_pay);
 				employeePayrollData = new EmployeePayrollData(employeeId, name, salary, start, gender);
 			}
 		} catch (SQLException e) {
@@ -207,6 +194,67 @@ public class EmployeePayrollDBService {
 		}
 
 		return employeePayrollData;
+	}
+	
+	private int updateEmployeeDataUsingStatement(String name, double salary) {
+		Connection connection = null;
+		int rowAffected=0;
+		int employeeId = -1;
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try (java.sql.Statement statement = connection.createStatement();) {
+			String sql = String.format("update employee set salary=%.2f where name='%s'", salary, name);
+			rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+			if (rowAffected == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					employeeId = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+				return rowAffected;
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		try (java.sql.Statement statement = connection.createStatement();) {
+			double deduction = salary * 0.2;
+			double taxable_pay = salary - deduction;
+			double tax = taxable_pay * 0.1;
+			double net_pay = salary - tax;
+			String sqlpayroll = String.format("update payroll set salary=%.2f,deduction=%.2f,taxable_pay=%.2f,tax=%.2f,net_pay=%.2f where emp_id='%s';",salary, deduction, taxable_pay, tax, net_pay,employeeId);
+		
+			rowAffected = statement.executeUpdate(sqlpayroll);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+				return rowAffected;
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return rowAffected;
 	}
 
 	public Map<String, Double> getAverageSalaryByGender() {

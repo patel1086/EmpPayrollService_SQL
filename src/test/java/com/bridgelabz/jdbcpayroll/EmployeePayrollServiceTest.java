@@ -11,6 +11,8 @@ import java.util.*;
 
 public class EmployeePayrollServiceTest {
 
+	public static boolean finalResult = true;
+
 	@Test
 	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
 		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
@@ -96,6 +98,33 @@ public class EmployeePayrollServiceTest {
 		Instant end = Instant.now();
 		System.out.println("Duration without thread: " + Duration.between(start, end));
 		Assert.assertEquals(3, employeePayrollService.countEntries());
+	}
+
+	@Test
+	public void given6Employee_UpdateSalaryDetailsWithThreads_ShouldMatchUpWithDB() {
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData("Jeff Bezoz", 5987.00),
+				new EmployeePayrollData("Narayan", 6789.00), new EmployeePayrollData("Bhanwar", 99876.00),
+				new EmployeePayrollData("Anushka", 94463.00), new EmployeePayrollData("Radha", 54786.00),
+				new EmployeePayrollData("Nancy", 56743.00) };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.updateEmployeeSalary(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		List<EmployeePayrollData> employeePayrollDataList = Arrays.asList(arrayOfEmps);
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			Runnable task = () -> {
+				boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(employeePayrollData.Name);
+				System.out.println("################Result " + finalResult);
+				finalResult = finalResult && result;
+				System.out.println("****************finalResult " + finalResult);
+			};
+			Thread thread = new Thread(task, employeePayrollData.Name);
+			thread.start();
+		});
+		Assert.assertTrue(finalResult);
+
 	}
 
 }

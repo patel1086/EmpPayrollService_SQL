@@ -18,120 +18,120 @@ import java.util.*;
 public class EmployeePayrollServiceTest {
 
 	public static boolean finalResult = true;
-//
-//	@Test
-//	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
-//		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
-//		arraylist = (ArrayList<EmployeePayrollData>) EmployeePayrollDBService.readData();
-//		Assert.assertEquals(5, arraylist.size());
-//	}
-//
-//	@Test
-//	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatchWithDB() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		List<EmployeePayrollData> employeePayrollData = employeePayrollService
-//				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		employeePayrollService.updateEmployeeSalary("Jitendra", 77888.89);
-//		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Jitendra");
-//		Assert.assertTrue(result);
-//
-//	}
-//
-//	@Test
-//	public void givenSalaryForEmplyee_FindAvgSalaryOfEmployee_ShouldMatchWithDB() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		double result = employeePayrollService.findAvgOfEmployeeSalary();
-//		Assert.assertEquals(result, result, 0.0);
-//	}
-//
-//	@Test
-//	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		employeePayrollService.addEmployeePayroll("Mark", 50000.00, LocalDate.now(), "M");
-//		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
-//
-//		Assert.assertEquals(1, result);
-//	}
-//
-//	@Test
-//	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_SholudReturnProperValue() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		Map<String, Double> averageSalaryByGender = employeePayrollService
-//				.readAverageSalaryByGender(EmployeePayrollService.IOService.DB_IO);
-//		Assert.assertTrue(
-//				averageSalaryByGender.get("M").equals(41339.645) && averageSalaryByGender.get("F").equals(10000.00));
-//	}
-//
-//	@Test
-//	public void givenDateRange_WhenRetrieved_ShouldMatchEmployeeCount() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		LocalDate startDate = LocalDate.of(2018, 01, 01);
-//		LocalDate endDate = LocalDate.now();
-//		List<EmployeePayrollData> employeePayrollData = employeePayrollService
-//				.readEmployeePayrollForDateRange(EmployeePayrollService.IOService.DB_IO, startDate, endDate);
-//		Assert.assertEquals(5, employeePayrollData.size());
-//	}
-//
-//	@Test
-//	public void given2Employee_WhenAddedToDB_ShouldMatchUpEmployeeEntries() {
-//		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
-//				new EmployeePayrollData(4, "Narayan", 20000.00, LocalDate.now(), "M") };
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		Instant start = Instant.now();
-//		employeePayrollService.addEmployeePayroll(Arrays.asList(arrayOfEmps));
-//		Instant end = Instant.now();
-//		System.out.println("Duration without thread: " + Duration.between(start, end));
-//		Assert.assertEquals(5, employeePayrollService.countEntries());
-//	}
-//
-//	@Test
-//	public void given6Employee_WhenAddedToDBWithThreads_ShouldMatchUpEmployeeEntries() {
-//		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
-//				new EmployeePayrollData(4, "Narayan", 25800.00, LocalDate.now(), "M"),
-//				new EmployeePayrollData(5, "Bhanwar", 90000.00, LocalDate.now(), "M"),
-//				new EmployeePayrollData(6, "Anushka", 25000.00, LocalDate.now(), "F"),
-//				new EmployeePayrollData(7, "Radha", 29000.00, LocalDate.now(), "F"),
-//				new EmployeePayrollData(8, "Nancy", 20300.00, LocalDate.now(), "F") };
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		Instant start = Instant.now();
-//		employeePayrollService.addEmployeePayrollWithThreads(Arrays.asList(arrayOfEmps));
-//		Instant end = Instant.now();
-//		System.out.println("Duration without thread: " + Duration.between(start, end));
-//		Assert.assertEquals(13, employeePayrollService.countEntries());
-//	}
-//
-//	@Test
-//	public void given6Employee_UpdateSalaryDetailsWithThreads_ShouldMatchUpWithDB() {
-//		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData("Jeff Bezoz", 5987.00),
-//				new EmployeePayrollData("Narayan", 6789.00), new EmployeePayrollData("Bhanwar", 99876.00),
-//				new EmployeePayrollData("Anushka", 94463.00), new EmployeePayrollData("Radha", 54786.00),
-//				new EmployeePayrollData("Nancy", 56743.00) };
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		Instant start = Instant.now();
-//		employeePayrollService.updateEmployeeSalary(Arrays.asList(arrayOfEmps));
-//		Instant end = Instant.now();
-//		System.out.println("Duration without thread: " + Duration.between(start, end));
-//		List<EmployeePayrollData> employeePayrollDataList = Arrays.asList(arrayOfEmps);
-//		employeePayrollDataList.forEach(employeePayrollData -> {
-//			Runnable task = () -> {
-//				boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(employeePayrollData.name);
-//				System.out.println("################Result " + finalResult);
-//				finalResult = finalResult && result;
-//				System.out.println("****************finalResult " + finalResult);
-//			};
-//			Thread thread = new Thread(task, employeePayrollData.name);
-//			thread.start();
-//		});
-//		Assert.assertTrue(finalResult);
-//
-//	}
+
+	@Test
+	public void givenSQLConnectionOnReadingFromMYSQL_WorkbenchShouldMatchEmployeeCount() {
+		ArrayList<EmployeePayrollData> arraylist = new ArrayList<>();
+		arraylist = (ArrayList<EmployeePayrollData>) EmployeePayrollDBService.readData();
+		Assert.assertEquals(5, arraylist.size());
+	}
+
+	@Test
+	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatchWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService
+				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		employeePayrollService.updateEmployeeSalary("Jitendra", 77888.89,EmployeePayrollService.IOService.DB_IO);
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Jitendra");
+		Assert.assertTrue(result);
+
+	}
+
+	@Test
+	public void givenSalaryForEmplyee_FindAvgSalaryOfEmployee_ShouldMatchWithDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		double result = employeePayrollService.findAvgOfEmployeeSalary();
+		Assert.assertEquals(result, result, 0.0);
+	}
+
+	@Test
+	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		employeePayrollService.addEmployeePayroll("Mark", 50000.00, LocalDate.now(), "M");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+
+		Assert.assertEquals(1, result);
+	}
+
+	@Test
+	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_SholudReturnProperValue() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Map<String, Double> averageSalaryByGender = employeePayrollService
+				.readAverageSalaryByGender(EmployeePayrollService.IOService.DB_IO);
+		Assert.assertTrue(
+				averageSalaryByGender.get("M").equals(41339.645) && averageSalaryByGender.get("F").equals(10000.00));
+	}
+
+	@Test
+	public void givenDateRange_WhenRetrieved_ShouldMatchEmployeeCount() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		LocalDate startDate = LocalDate.of(2018, 01, 01);
+		LocalDate endDate = LocalDate.now();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService
+				.readEmployeePayrollForDateRange(EmployeePayrollService.IOService.DB_IO, startDate, endDate);
+		Assert.assertEquals(5, employeePayrollData.size());
+	}
+
+	@Test
+	public void given2Employee_WhenAddedToDB_ShouldMatchUpEmployeeEntries() {
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(4, "Narayan", 20000.00, LocalDate.now(), "M") };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.addEmployeePayroll(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		Assert.assertEquals(5, employeePayrollService.countEntries());
+	}
+
+	@Test
+	public void given6Employee_WhenAddedToDBWithThreads_ShouldMatchUpEmployeeEntries() {
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(4, "Narayan", 25800.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(5, "Bhanwar", 90000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(6, "Anushka", 25000.00, LocalDate.now(), "F"),
+				new EmployeePayrollData(7, "Radha", 29000.00, LocalDate.now(), "F"),
+				new EmployeePayrollData(8, "Nancy", 20300.00, LocalDate.now(), "F") };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.addEmployeePayrollWithThreads(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		Assert.assertEquals(13, employeePayrollService.countEntries());
+	}
+
+	@Test
+	public void given6Employee_UpdateSalaryDetailsWithThreads_ShouldMatchUpWithDB() {
+		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData("Jeff Bezoz", 5987.00),
+				new EmployeePayrollData("Narayan", 6789.00), new EmployeePayrollData("Bhanwar", 99876.00),
+				new EmployeePayrollData("Anushka", 94463.00), new EmployeePayrollData("Radha", 54786.00),
+				new EmployeePayrollData("Nancy", 56743.00) };
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		Instant start = Instant.now();
+		employeePayrollService.updateEmployeeSalary(Arrays.asList(arrayOfEmps));
+		Instant end = Instant.now();
+		System.out.println("Duration without thread: " + Duration.between(start, end));
+		List<EmployeePayrollData> employeePayrollDataList = Arrays.asList(arrayOfEmps);
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			Runnable task = () -> {
+				boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(employeePayrollData.name);
+				System.out.println("################Result " + finalResult);
+				finalResult = finalResult && result;
+				System.out.println("****************finalResult " + finalResult);
+			};
+			Thread thread = new Thread(task, employeePayrollData.name);
+			thread.start();
+		});
+		Assert.assertTrue(finalResult);
+
+	}
 
 	@Before
 	public void setUp() {
@@ -168,11 +168,12 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
-		EmployeePayrollData employeePayrollData = new EmployeePayrollData(6, "Laxman Patel", 35000, LocalDate.now(),"M");
+		EmployeePayrollData employeePayrollData = new EmployeePayrollData(6, "Laxman Patel", 35000, LocalDate.now(),
+				"M");
 		Response response = addEmployeeToJsonServer(employeePayrollData);
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(201, statusCode);
-		employeePayrollData=new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+		employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
 		employeePayrollService.addEmployeeToPayroll(employeePayrollData, EmployeePayrollService.IOService.REST_IO);
 		long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
 		Assert.assertEquals(7, entries);
@@ -190,27 +191,44 @@ public class EmployeePayrollServiceTest {
 			Response response = addEmployeeToJsonServer(employeePayrollData);
 			int statusCode = response.getStatusCode();
 			Assert.assertEquals(201, statusCode);
-			employeePayrollData=new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
 			employeePayrollService.addEmployeeToPayroll(employeePayrollData, EmployeePayrollService.IOService.REST_IO);
 		}
 		long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
 		Assert.assertEquals(7, entries);
 	}
-	
+
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Response() {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
-		employeePayrollService.updateEmployeeSalary("Radhe",99999,EmployeePayrollService.IOService.REST_IO);
-		EmployeePayrollData employeePayrollData=employeePayrollService.getEmployeePayrollData("Radhe");
+		employeePayrollService.updateEmployeeSalary("Radhe", 99999, EmployeePayrollService.IOService.REST_IO);
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Radhe");
 		String empJSon = new Gson().toJson(employeePayrollData);
 		RequestSpecification request = RestAssured.given();
 		request.header("Content-Type", "application/json");
-        request.body(empJSon);
-        Response response = request.put("/employees/" + employeePayrollData.id);
-        int status = response.getStatusCode();
-        Assert.assertEquals(200, status);
+		request.body(empJSon);
+		Response response = request.put("/employees/" + employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+	}
+
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200ResponseAndCount() {
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Radhe");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/employees/" + employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+		employeePayrollService.deleteEmployeeToPayroll(employeePayrollData.name,
+				EmployeePayrollService.IOService.REST_IO);
+		long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+		Assert.assertEquals(6, entries);
 	}
 
 }

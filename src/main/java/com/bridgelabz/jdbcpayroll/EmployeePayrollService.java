@@ -24,7 +24,7 @@ public class EmployeePayrollService {
 		this();
 		this.employeePayrollList = employeePayrollList;
 	}
-	
+
 	public static void main(String[] args) {
 		ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
@@ -39,7 +39,7 @@ public class EmployeePayrollService {
 	}
 
 	public void updateEmployeeSalary(String name, double salary, IOService ioService) {
-		if(ioService.equals(IOService.DB_IO)){
+		if (ioService.equals(IOService.DB_IO)) {
 			int result = new EmployeePayrollDBService().updateEmployeeData(name, salary);
 			if (result == 0)
 				return;
@@ -135,7 +135,7 @@ public class EmployeePayrollService {
 			Runnable task = () -> {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				System.out.println("Employee Salary Being Added: " + Thread.currentThread().getName());
-				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary,IOService.DB_IO);
+				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary, IOService.DB_IO);
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
 				System.out.println("Salary Updated: " + Thread.currentThread().getName());
 			};
@@ -154,16 +154,23 @@ public class EmployeePayrollService {
 	}
 
 	public long countEntries(IOService ioService) {
-		System.out.println("*****"+employeePayrollList.size());
 		return employeePayrollList.size();
 	}
 
 	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData, IOService iOService) {
-		if(iOService.equals(IOService.DB_IO)) {
-			new EmployeePayrollDBService().addEmployeePayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.start, employeePayrollData.gender);
-		}
-		else
+		if (iOService.equals(IOService.DB_IO)) {
+			new EmployeePayrollDBService().addEmployeePayroll(employeePayrollData.name, employeePayrollData.salary,
+					employeePayrollData.start, employeePayrollData.gender);
+		} else
 			employeePayrollList.add(employeePayrollData);
+	}
+
+	public void deleteEmployeeToPayroll(String name, IOService iOService) {
+		if (iOService.equals(IOService.REST_IO)) {
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+			employeePayrollList.remove(employeePayrollData);
 		}
+
+	}
 
 }

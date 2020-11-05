@@ -195,10 +195,10 @@ public class EmployeePayrollDBService {
 
 		return employeePayrollData;
 	}
-	
+
 	private int updateEmployeeDataUsingStatement(String name, double salary) {
 		Connection connection = null;
-		int rowAffected=0;
+		int rowAffected = 0;
 		int employeeId = -1;
 		try {
 			connection = this.getConnection();
@@ -228,8 +228,10 @@ public class EmployeePayrollDBService {
 			double taxable_pay = salary - deduction;
 			double tax = taxable_pay * 0.1;
 			double net_pay = salary - tax;
-			String sqlpayroll = String.format("update payroll set salary=%.2f,deduction=%.2f,taxable_pay=%.2f,tax=%.2f,net_pay=%.2f where emp_id='%s';",salary, deduction, taxable_pay, tax, net_pay,employeeId);
-		
+			String sqlpayroll = String.format(
+					"update payroll set salary=%.2f,deduction=%.2f,taxable_pay=%.2f,tax=%.2f,net_pay=%.2f where emp_id='%s';",
+					salary, deduction, taxable_pay, tax, net_pay, employeeId);
+
 			rowAffected = statement.executeUpdate(sqlpayroll);
 		} catch (SQLException e) {
 			e.printStackTrace();

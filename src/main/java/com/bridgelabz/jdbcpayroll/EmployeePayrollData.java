@@ -33,8 +33,8 @@ public class EmployeePayrollData {
 	}
 
 	public EmployeePayrollData(String name, double salary) {
-		this.name=name;
-		this.salary=salary;
+		this.name = name;
+		this.salary = salary;
 	}
 
 	@Override
@@ -105,8 +105,5 @@ public class EmployeePayrollData {
 		return "EmployeePayrollData [ID=" + id + ", Name=" + name + ", salary=" + salary + ", start=" + start
 				+ ",gender=" + gender + "]";
 	}
-
-
-	
 
 }

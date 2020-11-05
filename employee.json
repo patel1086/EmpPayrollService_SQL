@@ -70,6 +70,22 @@
       "tax": 0,
       "netpay": 0,
       "emp_id": 0
+    },
+    {
+      "id": 7,
+      "name": "Radhe",
+      "salary": 30970,
+      "start": {
+        "year": 2020,
+        "month": 11,
+        "day": 5
+      },
+      "gender": "M",
+      "deduction": 0,
+      "taxable_pay": 0,
+      "tax": 0,
+      "netpay": 0,
+      "emp_id": 0
     }
   ]
 }

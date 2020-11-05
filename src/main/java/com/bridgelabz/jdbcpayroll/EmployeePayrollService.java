@@ -152,10 +152,15 @@ public class EmployeePayrollService {
 	}
 
 	public long countEntries(IOService ioService) {
-		if(ioService.equals(IOService.REST_IO)) {
-			return employeePayrollList.size();
-		}
-		return 0;
+		return employeePayrollList.size();
 	}
+
+	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData, IOService iOService) {
+		if(iOService.equals(IOService.DB_IO)) {
+			new EmployeePayrollDBService().addEmployeePayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.start, employeePayrollData.gender);
+		}
+		else
+			employeePayrollList.add(employeePayrollData);
+		}
 
 }

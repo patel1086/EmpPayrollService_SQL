@@ -172,6 +172,9 @@ public class EmployeePayrollServiceTest {
 		Response response=addEmployeeToJsonServer(employeePayrollData);
 		int statusCode=response.getStatusCode();
 		Assert.assertEquals(201, statusCode);
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+		Assert.assertEquals(6, entries);
 	}
 
 	

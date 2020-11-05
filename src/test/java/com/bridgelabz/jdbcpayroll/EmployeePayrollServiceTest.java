@@ -4,6 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,9 +28,9 @@ public class EmployeePayrollServiceTest {
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatchWithDB() {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-		ArrayList<EmployeePayrollData> employeePayrollData = employeePayrollService
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService
 				.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-		employeePayrollService.updateEmployeeSalary("Jitendra", 77000.89);
+		employeePayrollService.updateEmployeeSalary("Jitendra", 77888.89);
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Jitendra");
 		Assert.assertTrue(result);
 
@@ -39,15 +44,15 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(result, result, 0.0);
 	}
 
-//	@Test
-//	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
-//		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-//		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
-//		employeePayrollService.addEmployeePayroll("Mark",50000.00,LocalDate.now(),"M");
-//		boolean result=employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
-//		
-//		Assert.assertEquals(1,result);
-//	}
+	@Test
+	public void insertEmployeeDataInTable_ShouldUpdateTheDB() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData(EmployeePayrollService.IOService.DB_IO);
+		employeePayrollService.addEmployeePayroll("Mark", 50000.00, LocalDate.now(), "M");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+
+		Assert.assertEquals(1, result);
+	}
 
 	@Test
 	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_SholudReturnProperValue() {
@@ -86,7 +91,7 @@ public class EmployeePayrollServiceTest {
 	@Test
 	public void given6Employee_WhenAddedToDBWithThreads_ShouldMatchUpEmployeeEntries() {
 		EmployeePayrollData[] arrayOfEmps = { new EmployeePayrollData(3, "Jeff Bezoz", 10000.00, LocalDate.now(), "M"),
-				new EmployeePayrollData(4, "Narayan", 20000.00, LocalDate.now(), "M"),
+				new EmployeePayrollData(4, "Narayan", 25800.00, LocalDate.now(), "M"),
 				new EmployeePayrollData(5, "Bhanwar", 90000.00, LocalDate.now(), "M"),
 				new EmployeePayrollData(6, "Anushka", 25000.00, LocalDate.now(), "F"),
 				new EmployeePayrollData(7, "Radha", 29000.00, LocalDate.now(), "F"),
@@ -97,7 +102,7 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.addEmployeePayrollWithThreads(Arrays.asList(arrayOfEmps));
 		Instant end = Instant.now();
 		System.out.println("Duration without thread: " + Duration.between(start, end));
-		Assert.assertEquals(3, employeePayrollService.countEntries());
+		Assert.assertEquals(13, employeePayrollService.countEntries());
 	}
 
 	@Test
@@ -115,16 +120,38 @@ public class EmployeePayrollServiceTest {
 		List<EmployeePayrollData> employeePayrollDataList = Arrays.asList(arrayOfEmps);
 		employeePayrollDataList.forEach(employeePayrollData -> {
 			Runnable task = () -> {
-				boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(employeePayrollData.Name);
+				boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(employeePayrollData.name);
 				System.out.println("################Result " + finalResult);
 				finalResult = finalResult && result;
 				System.out.println("****************finalResult " + finalResult);
 			};
-			Thread thread = new Thread(task, employeePayrollData.Name);
+			Thread thread = new Thread(task, employeePayrollData.name);
 			thread.start();
 		});
 		Assert.assertTrue(finalResult);
 
+	}
+
+	@Before
+	public void setUp() {
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+
+	public EmployeePayrollData[] getEmployeeList() {
+		Response response = RestAssured.get("/employees");
+		System.out.println("Employee Payroll Service " + response.asString());
+		EmployeePayrollData[] arrayOfEmps = new Gson().fromJson(response.asString(), EmployeePayrollData[].class);
+		return arrayOfEmps;
+	}
+
+	@Test
+	public void giveEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+		Assert.assertEquals(5, entries);
 	}
 
 }

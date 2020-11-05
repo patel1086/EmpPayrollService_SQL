@@ -1,0 +1,34 @@
+{
+  "employees": [
+    {
+      "name": "David",
+      "salary": "5000",
+      "id": 2,
+       "gender":"M"
+    },
+    {
+      "name": "Patel",
+      "salary": "8000",
+      "id": 3,
+       "gender":"M"
+    },
+    {
+      "id": 1,
+      "name": "Pankaj",
+      "salary": "10000",
+       "gender":"M"
+    },
+    {
+      "name": "Lisa",
+      "salary": "2000",
+      "id": 4,
+       "gender":"M"
+    },
+    {
+      "name": "JP",
+      "salary": "8597",
+      "id": 5,
+       "gender":"M"
+    }
+  ]
+}

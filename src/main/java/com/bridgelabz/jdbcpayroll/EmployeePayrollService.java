@@ -15,22 +15,23 @@ public class EmployeePayrollService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	}
 
-	public ArrayList<EmployeePayrollData> employeePayrollList;
+	public List<EmployeePayrollData> employeePayrollList;
 
 	public EmployeePayrollService() {
 	}
 
-	public EmployeePayrollService(ArrayList<EmployeePayrollData> employeePayrollList) {
+	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
+		this();
 		this.employeePayrollList = employeePayrollList;
 	}
-
+	
 	public static void main(String[] args) {
 		ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 
 	}
 
-	public ArrayList<EmployeePayrollData> readEmployeePayrollData(IOService ioService) {
+	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService) {
 		if (ioService.equals(IOService.DB_IO))
 			this.employeePayrollList = (ArrayList<EmployeePayrollData>) new EmployeePayrollDBService().readData();
 		return this.employeePayrollList;
@@ -48,15 +49,15 @@ public class EmployeePayrollService {
 
 	private EmployeePayrollData getEmployeePayrollData(String name) {
 		return this.employeePayrollList.stream()
-				.filter(employeePayrollDataItem -> employeePayrollDataItem.Name.equals(name)).findFirst().orElse(null);
+				.filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name)).findFirst().orElse(null);
 	}
 
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
 		EmployeePayrollDBService employeePayrollDBService = new EmployeePayrollDBService();
 		ArrayList<EmployeePayrollData> employeePayrollDataList = new ArrayList<EmployeePayrollData>();
 		employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
-		return employeePayrollDataList.get(0).Name
-				.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).Name);
+		return employeePayrollDataList.get(0).name
+				.equals(EmployeePayrollDBService.getEmployeePayrollData(name).get(0).name);
 	}
 
 	public double findAvgOfEmployeeSalary() {
@@ -89,7 +90,7 @@ public class EmployeePayrollService {
 
 	public void addEmployeePayroll(List<EmployeePayrollData> employeePayrollDataList) {
 		employeePayrollDataList.forEach(employeePayrollData -> {
-			this.addEmployeePayroll(employeePayrollData.Name, employeePayrollData.salary, employeePayrollData.start,
+			this.addEmployeePayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.start,
 					employeePayrollData.gender);
 
 		});
@@ -107,12 +108,12 @@ public class EmployeePayrollService {
 			Runnable task = () -> {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
-				this.addEmployeePayroll(employeePayrollData.Name, employeePayrollData.salary, employeePayrollData.start,
+				this.addEmployeePayroll(employeePayrollData.name, employeePayrollData.salary, employeePayrollData.start,
 						employeePayrollData.gender);
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
 				System.out.println("Employee Added: " + Thread.currentThread().getName());
 			};
-			Thread thread = new Thread(task, employeePayrollData.Name);
+			Thread thread = new Thread(task, employeePayrollData.name);
 			thread.start();
 		});
 		while (employeeAdditionStatus.containsValue(false)) {
@@ -132,22 +133,29 @@ public class EmployeePayrollService {
 			Runnable task = () -> {
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				System.out.println("Employee Salary Being Added: " + Thread.currentThread().getName());
-				this.updateEmployeeSalary(employeePayrollData.Name, employeePayrollData.salary);
+				this.updateEmployeeSalary(employeePayrollData.name, employeePayrollData.salary);
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
 				System.out.println("Salary Updated: " + Thread.currentThread().getName());
 			};
-			Thread thread = new Thread(task, employeePayrollData.Name);
+			Thread thread = new Thread(task, employeePayrollData.name);
 			thread.start();
 		});
 		while (employeeAdditionStatus.containsValue(false)) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 
 			}
 		}
 		System.out.println(this.employeePayrollList);
 
+	}
+
+	public long countEntries(IOService ioService) {
+		if(ioService.equals(IOService.REST_IO)) {
+			return employeePayrollList.size();
+		}
+		return 0;
 	}
 
 }

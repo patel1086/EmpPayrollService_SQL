@@ -1,31 +1,25 @@
 {
   "employees": [
     {
-      "name": "David",
-      "salary": "5000",
       "id": 2,
-      "gender": "M",
+      "name": "David",
+      "salary": 1111,
       "start": {
         "year": 2020,
         "month": 11,
         "day": 5
-      }
+      },
+      "gender": "M",
+      "deduction": 0,
+      "taxable_pay": 0,
+      "tax": 0,
+      "netpay": 0,
+      "emp_id": 0
     },
     {
       "name": "Patel",
       "salary": "8000",
       "id": 3,
-      "gender": "M",
-      "start": {
-        "year": 2020,
-        "month": 11,
-        "day": 5
-      }
-    },
-    {
-      "id": 1,
-      "name": "Pankaj",
-      "salary": "10000",
       "gender": "M",
       "start": {
         "year": 2020,
@@ -58,11 +52,11 @@
     {
       "id": 6,
       "name": "Laxman Patel",
-      "salary": 30000,
+      "salary": 35000,
       "start": {
         "year": 2020,
         "month": 11,
-        "day": 5
+        "day": 6
       },
       "gender": "M",
       "deduction": 0,
@@ -72,15 +66,47 @@
       "emp_id": 0
     },
     {
-      "id": 7,
-      "name": "Radhe",
+      "id": 12,
+      "name": "Hanuman",
       "salary": 30970,
       "start": {
         "year": 2020,
         "month": 11,
-        "day": 5
+        "day": 6
       },
       "gender": "M",
+      "deduction": 0,
+      "taxable_pay": 0,
+      "tax": 0,
+      "netpay": 0,
+      "emp_id": 0
+    },
+    {
+      "id": 13,
+      "name": "ManjuLika",
+      "salary": 34542,
+      "start": {
+        "year": 2020,
+        "month": 11,
+        "day": 6
+      },
+      "gender": "F",
+      "deduction": 0,
+      "taxable_pay": 0,
+      "tax": 0,
+      "netpay": 0,
+      "emp_id": 0
+    },
+    {
+      "id": 14,
+      "name": "Suman",
+      "salary": 359876,
+      "start": {
+        "year": 2020,
+        "month": 11,
+        "day": 6
+      },
+      "gender": "F",
       "deduction": 0,
       "taxable_pay": 0,
       "tax": 0,

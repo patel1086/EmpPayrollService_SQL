@@ -15,14 +15,14 @@ public class EmployeePayrollService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	}
 
-	public List<EmployeePayrollData> employeePayrollList;
+	public ArrayList<EmployeePayrollData> employeePayrollList;
 
 	public EmployeePayrollService() {
 	}
 
-	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
+	public EmployeePayrollService(ArrayList<EmployeePayrollData> list) {
 		this();
-		this.employeePayrollList = employeePayrollList;
+		this.employeePayrollList = list;
 	}
 
 	public static void main(String[] args) {
@@ -170,7 +170,5 @@ public class EmployeePayrollService {
 			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
 			employeePayrollList.remove(employeePayrollData);
 		}
-
 	}
-
 }
